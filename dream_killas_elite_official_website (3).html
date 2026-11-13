@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dream Killas Elite | Official Basketball Team Hub</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Teko for bold sports display, Inter for clean UI -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Teko:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Sports & UI Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Teko', 'sans-serif'],
+                    },
+                    colors: {
+                        obsidian: '#050505',
+                        charcoal: '#0C0C0E',
+                        cardDark: '#121215',
+                        scarlet: {
+                            300: '#FF6666',
+                            400: '#FF3333',
+                            500: '#FF0000',
+                            600: '#E60000',
+                            700: '#CC0000',
+                            800: '#2A0000',
+                        },
+                        crimson: {
+                            500: '#FF0000',
+                            600: '#E60000',
+                            700: '#CC0000',
+                            900: '#2A0000',
+                        },
+                        silver: {
+                            300: '#D4D4D8',
+                            400: '#A1A1AA',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom subtle scrollbar and true primary red sports glow effects */
+        body {
+            background-color: #050505;
+            color: #FFFFFF;
+            overflow-x: hidden;
+        }
+        .court-pattern {
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(255, 0, 0, 0.16) 0%, transparent 62%),
+                radial-gradient(circle at 85% 20%, rgba(230, 0, 0, 0.14) 0%, transparent 48%),
+                linear-gradient(to bottom, rgba(5, 5, 5, 0.78), #050505);
+        }
+        .red-glow {
+            box-shadow: 0 0 36px rgba(255, 0, 0, 0.24), inset 0 1px 0 rgba(255, 0, 0, 0.25);
+        }
+        .card-hover {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 0, 0, 0.75);
+            box-shadow: 0 14px 32px -10px rgba(255, 0, 0, 0.35);
+        }
+        .jersey-stroke {
+            -webkit-text-stroke: 1.5px rgba(255, 0, 0, 0.45);
+            color: transparent;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-crimson-500 selection:text-white">
+
+    <!-- Toast Notification Banner (Replaces alert()) -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-40 bg-obsidian/95 backdrop-blur-md border-b border-crimson-500/35">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-18 py-3">
+                <!-- Brand Emblem -->
+                <a href="#" class="flex items-center gap-3 group">
+                    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-crimson-500 via-crimson-600 to-crimson-900 border border-crimson-500/50 flex items-center justify-center text-white font-display font-bold text-2xl shadow-lg shadow-crimson-500/25 group-hover:scale-105 transition-transform">
+                        <i class="fa-solid fa-basketball"></i>
+                    </div>
+                    <div>
+                        <span class="font-display text-2xl sm:text-3xl font-bold tracking-wider uppercase text-white leading-none block">
+                            DREAM KILLAS <span class="text-crimson-500">ELITE</span>
+                        </span>
+                        <span class="text-[10px] uppercase tracking-[0.22em] text-zinc-400 font-semibold block">
+                            AAU • Travel • Showcase Squad
+                        </span>
+                    </div>
+                </a>
+
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden md:flex items-center gap-7 text-sm font-semibold text-zinc-300">
+                    <a href="#next-game" class="hover:text-crimson-500 transition-colors">Next Game</a>
+                    <a href="#roster" class="hover:text-crimson-500 transition-colors">Roster</a>
+                    <a href="#schedule" class="hover:text-crimson-500 transition-colors">Schedule</a>
+                    <a href="#team-stats" class="hover:text-crimson-500 transition-colors">Team Stats</a>
+                </nav>
+
+                <!-- Action / Manage Team Controls -->
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <!-- Discreet Coach Lock Indicator (Only visible when unlocked, or subtle lock icon) -->
+                    <button id="coach-status-btn" onclick="handleCoachStatusClick()" title="Coach Access" class="px-3 py-2 rounded-xl text-xs sm:text-sm font-bold border border-zinc-800 bg-zinc-900/80 hover:border-zinc-700 text-zinc-400 hover:text-zinc-200 transition-all flex items-center gap-2">
+                        <i id="coach-lock-icon" class="fa-solid fa-lock text-xs"></i>
+                        <span id="coach-btn-text" class="hidden sm:inline">Coach</span>
+                    </button>
+                    <button onclick="openTryoutModal()" class="hidden sm:inline-flex px-4 py-2 rounded-xl text-sm font-bold bg-crimson-600 hover:bg-crimson-700 border border-crimson-500/50 text-white transition-all shadow-md shadow-crimson-500/25">
+                        Tryouts / Contact
+                    </button>
+                    <!-- Mobile Menu Button -->
+                    <button onclick="toggleMobileMenu()" class="md:hidden p-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown Navigation -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-zinc-800 bg-charcoal px-4 py-4 space-y-3">
+            <a href="#next-game" onclick="toggleMobileMenu()" class="block py-2 text-base font-semibold text-zinc-200 hover:text-crimson-500">Next Game</a>
+            <a href="#roster" onclick="toggleMobileMenu()" class="block py-2 text-base font-semibold text-zinc-200 hover:text-crimson-500">Roster</a>
+            <a href="#schedule" onclick="toggleMobileMenu()" class="block py-2 text-base font-semibold text-zinc-200 hover:text-crimson-500">Schedule & Results</a>
+            <a href="#team-stats" onclick="toggleMobileMenu()" class="block py-2 text-base font-semibold text-zinc-200 hover:text-crimson-500">Team Stats</a>
+            <button onclick="toggleMobileMenu(); openTryoutModal();" class="w-full py-2.5 rounded-xl bg-crimson-600 hover:bg-crimson-700 text-white font-bold text-sm">
+                Tryout & Recruitment Inquiry
+            </button>
+        </div>
+    </header>
+
+    <!-- Coach Admin Toolbar (Hidden for regular visitors until unlocked via PIN) -->
+    <div id="manage-banner" class="hidden bg-gradient-to-r from-crimson-900 via-crimson-600/25 to-crimson-900 border-b border-crimson-500/40 px-4 py-3">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm">
+            <div class="flex items-center gap-2.5 text-scarlet-300 font-semibold">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span><strong>Coach Mode Unlocked:</strong> Only you see these edit controls.</span>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+                <button onclick="exportUpdatedHTML()" class="px-3.5 py-1.5 rounded-xl bg-crimson-600 hover:bg-crimson-700 border border-crimson-500/50 text-white text-xs font-extrabold shadow-md transition-all flex items-center gap-1.5">
+                    <i class="fa-solid fa-download"></i> Export Updated HTML
+                </button>
+                <button onclick="openChangePinModal()" class="px-3 py-1.5 rounded-xl bg-zinc-950 hover:bg-zinc-900 text-zinc-200 text-xs font-bold border border-zinc-800 transition-colors">
+                    <i class="fa-solid fa-key mr-1 text-crimson-500"></i> Change PIN
+                </button>
+                <button onclick="resetDemoData()" class="px-3 py-1.5 rounded-xl bg-zinc-950 hover:bg-zinc-900 text-zinc-400 hover:text-white text-xs font-semibold border border-zinc-800 transition-colors">
+                    Reset Defaults
+                </button>
+                <button onclick="lockCoachMode()" class="px-3 py-1.5 rounded-xl bg-black hover:bg-zinc-900 text-scarlet-300 hover:text-white text-xs font-bold border border-crimson-500/40 transition-colors">
+                    <i class="fa-solid fa-lock mr-1"></i> Lock Site
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- HERO & NEXT GAME COUNTDOWN SECTION -->
+    <section id="next-game" class="relative court-pattern border-b border-crimson-500/35 pt-10 pb-16 sm:pt-14 sm:pb-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Top Season Pill & Record -->
+            <div class="flex flex-wrap items-center justify-between gap-4 mb-8">
+                <div class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-crimson-900/90 border border-crimson-500/40 text-xs font-bold uppercase tracking-wider text-crimson-500">
+                    <span class="w-2 h-2 rounded-full bg-crimson-500 animate-pulse"></span>
+                    2026-27 Showcase Season • <span id="hero-record-badge" class="text-white">14-2 Overall</span>
+                </div>
+                <div class="text-xs sm:text-sm text-zinc-400 font-medium">
+                    <i class="fa-solid fa-location-dot text-crimson-500 mr-1.5"></i> Louisville / Shepherdsville, KY Region
+                </div>
+            </div>
+
+            <!-- Main Hero Headline -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <div class="lg:col-span-5 space-y-5">
+                    <h1 class="font-display text-5xl sm:text-6xl lg:text-7xl font-bold uppercase tracking-tight leading-[0.95] text-white">
+                        NO MERCY.<br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-crimson-500 to-crimson-600">
+                            DREAM KILLAS.
+                        </span>
+                    </h1>
+                    <p class="text-zinc-400 text-sm sm:text-base leading-relaxed max-w-md">
+                        Built on relentless defense, fast-break tempo, and elite court vision. Track our active roster, live countdown to tip-off, and tournament schedule.
+                    </p>
+                    <div class="flex flex-wrap items-center gap-3 pt-1">
+                        <a href="#roster" class="px-5 py-3 rounded-xl bg-crimson-600 hover:bg-crimson-700 border border-crimson-500/50 text-white font-bold text-sm transition-all flex items-center gap-2 shadow-lg shadow-crimson-500/25">
+                            <i class="fa-solid fa-users"></i> Meet The Squad
+                        </a>
+                        <a href="#schedule" class="px-5 py-3 rounded-xl bg-charcoal border border-zinc-800 text-white font-bold text-sm hover:border-crimson-500 transition-all flex items-center gap-2">
+                            <i class="fa-regular fa-calendar"></i> Full Schedule
+                        </a>
+                    </div>
+                </div>
+
+                <!-- NEXT GAME SPOTLIGHT CARD -->
+                <div class="lg:col-span-7">
+                    <div class="relative rounded-3xl bg-cardDark border border-crimson-500/35 p-6 sm:p-8 red-glow overflow-hidden">
+                        <!-- Decorative Corner Accent -->
+                        <div class="absolute -top-16 -right-16 w-48 h-48 bg-crimson-500/15 rounded-full blur-2xl pointer-events-none"></div>
+
+                        <!-- Card Header -->
+                        <div class="flex flex-wrap items-center justify-between gap-2 pb-5 border-b border-zinc-800/90">
+                            <div class="flex items-center gap-2.5">
+                                <span class="px-3 py-1 rounded-lg bg-crimson-900 border border-crimson-500/40 text-white text-xs font-extrabold uppercase tracking-wider">
+                                    <i class="fa-solid fa-fire text-crimson-500 mr-1"></i> Next Game Tip-Off
+                                </span>
+                                <span id="ng-tournament" class="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
+                                    Midwest Winter Classic
+                                </span>
+                            </div>
+                            <button id="edit-next-game-btn" onclick="openEditNextGameModal()" class="coach-only hidden px-3 py-1.5 rounded-lg bg-zinc-800/90 hover:bg-crimson-600 hover:text-white text-zinc-300 text-xs font-bold transition-colors items-center gap-1.5">
+                                <i class="fa-solid fa-pen-to-square"></i> Edit Next Game
+                            </button>
+                        </div>
+
+                        <!-- Matchup Display -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 items-center gap-6 py-7 text-center">
+                            <!-- Home / Dream Killas Elite -->
+                            <div class="flex flex-col items-center">
+                                <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-crimson-500 via-crimson-600 to-crimson-900 border border-crimson-500/50 text-white flex items-center justify-center font-display text-3xl sm:text-4xl font-bold shadow-lg shadow-crimson-500/30 mb-3">
+                                    DKE
+                                </div>
+                                <h3 class="font-display text-2xl sm:text-3xl font-bold uppercase tracking-wide text-white leading-none">
+                                    Dream Killas Elite
+                                </h3>
+                                <span id="ng-our-record" class="text-xs font-semibold text-crimson-500 mt-1">14-2 • HOME</span>
+                            </div>
+
+                            <!-- VS Divider -->
+                            <div class="flex flex-col items-center justify-center">
+                                <span class="font-display text-4xl sm:text-5xl font-bold jersey-stroke tracking-widest">VS</span>
+                                <span id="ng-date-display" class="mt-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-700 text-xs font-bold text-zinc-200">
+                                    Sat, Nov 21 • 7:30 PM EST
+                                </span>
+                            </div>
+
+                            <!-- Opponent -->
+                            <div class="flex flex-col items-center">
+                                <div id="ng-opp-badge" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-zinc-800 border border-zinc-700 text-zinc-200 flex items-center justify-center font-display text-3xl sm:text-4xl font-bold shadow-lg mb-3">
+                                    MCB
+                                </div>
+                                <h3 id="ng-opponent-name" class="font-display text-2xl sm:text-3xl font-bold uppercase tracking-wide text-white leading-none">
+                                    Metro City Ballers
+                                </h3>
+                                <span id="ng-opp-record" class="text-xs font-semibold text-zinc-400 mt-1">12-4 • AWAY</span>
+                            </div>
+                        </div>
+
+                        <!-- Live Countdown Grid -->
+                        <div class="bg-obsidian/90 border border-crimson-500/35 rounded-2xl p-4 mb-6">
+                            <div class="grid grid-cols-4 gap-2 sm:gap-4 text-center">
+                                <div class="bg-charcoal rounded-xl py-2.5 px-1 border border-zinc-800/90">
+                                    <span id="cd-days" class="font-display text-3xl sm:text-4xl font-bold text-crimson-500 block leading-none">00</span>
+                                    <span class="text-[10px] uppercase tracking-widest text-zinc-400 font-semibold">Days</span>
+                                </div>
+                                <div class="bg-charcoal rounded-xl py-2.5 px-1 border border-zinc-800/90">
+                                    <span id="cd-hours" class="font-display text-3xl sm:text-4xl font-bold text-white block leading-none">00</span>
+                                    <span class="text-[10px] uppercase tracking-widest text-zinc-400 font-semibold">Hours</span>
+                                </div>
+                                <div class="bg-charcoal rounded-xl py-2.5 px-1 border border-zinc-800/90">
+                                    <span id="cd-mins" class="font-display text-3xl sm:text-4xl font-bold text-white block leading-none">00</span>
+                                    <span class="text-[10px] uppercase tracking-widest text-zinc-400 font-semibold">Mins</span>
+                                </div>
+                                <div class="bg-charcoal rounded-xl py-2.5 px-1 border border-zinc-800/90">
+                                    <span id="cd-secs" class="font-display text-3xl sm:text-4xl font-bold text-scarlet-400 block leading-none">00</span>
+                                    <span class="text-[10px] uppercase tracking-widest text-zinc-400 font-semibold">Secs</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Venue & Action Buttons -->
+                        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                            <div class="flex items-center gap-3 text-left w-full sm:w-auto">
+                                <div class="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-crimson-500 shrink-0">
+                                    <i class="fa-solid fa-map-pin"></i>
+                                </div>
+                                <div>
+                                    <p id="ng-venue-name" class="text-sm font-bold text-white">Kentucky Exposition Center — Court 1</p>
+                                    <p id="ng-venue-address" class="text-xs text-zinc-400">937 Phillips Ln, Louisville, KY</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-2.5 w-full sm:w-auto">
+                                <button id="rsvp-btn" onclick="toggleGameRSVP()" class="flex-1 sm:flex-initial px-5 py-3 rounded-xl bg-crimson-600 hover:bg-crimson-700 border border-crimson-500/50 text-white font-extrabold text-sm transition-all flex items-center justify-center gap-2 shadow-lg shadow-crimson-500/25">
+                                    <i class="fa-solid fa-ticket"></i>
+                                    <span id="rsvp-btn-text">RSVP / Fan Pass</span>
+                                </button>
+                                <button onclick="copyGameDetails()" title="Share Matchup" class="p-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 transition-colors">
+                                    <i class="fa-solid fa-share-nodes"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TEAM STATS BAR -->
+    <section id="team-stats" class="bg-charcoal border-b border-crimson-500/35 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                <div class="bg-cardDark border border-zinc-800/90 rounded-2xl p-5 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wider text-zinc-400">Team PPG</p>
+                        <p id="stat-team-ppg" class="font-display text-4xl font-bold text-white mt-1">84.6</p>
+                    </div>
+                    <div class="w-11 h-11 rounded-xl bg-crimson-900 border border-crimson-500/35 text-crimson-500 flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-basketball"></i>
+                    </div>
+                </div>
+                <div class="bg-cardDark border border-zinc-800/90 rounded-2xl p-5 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wider text-zinc-400">Team RPG</p>
+                        <p id="stat-team-rpg" class="font-display text-4xl font-bold text-white mt-1">39.2</p>
+                    </div>
+                    <div class="w-11 h-11 rounded-xl bg-zinc-800 text-zinc-200 flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-hands-holding"></i>
+                    </div>
+                </div>
+                <div class="bg-cardDark border border-zinc-800/90 rounded-2xl p-5 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wider text-zinc-400">Team APG</p>
+                        <p id="stat-team-apg" class="font-display text-4xl font-bold text-white mt-1">21.4</p>
+                    </div>
+                    <div class="w-11 h-11 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                </div>
+                <div class="bg-cardDark border border-zinc-800/90 rounded-2xl p-5 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wider text-zinc-400">Active Roster</p>
+                        <p id="stat-roster-count" class="font-display text-4xl font-bold text-crimson-500 mt-1">8</p>
+                    </div>
+                    <div class="w-11 h-11 rounded-xl bg-crimson-900 border border-crimson-500/35 text-crimson-500 flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- INTERACTIVE TEAM ROSTER SECTION -->
+    <section id="roster" class="py-16 sm:py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Section Header & Add Player CTA -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+                <div>
+                    <span class="text-xs font-extrabold uppercase tracking-[0.2em] text-crimson-500">Official Active Squad</span>
+                    <h2 class="font-display text-4xl sm:text-5xl font-bold uppercase tracking-tight text-white mt-1">
+                        Dream Killas Elite Roster
+                    </h2>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-3">
+                    <button id="add-player-btn" onclick="openPlayerFormModal()" class="coach-only hidden px-4 py-2.5 rounded-xl bg-crimson-600 hover:bg-crimson-700 text-white font-extrabold text-sm transition-all items-center gap-2 shadow-md">
+                        <i class="fa-solid fa-plus"></i> Add Player
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filter Tabs & Search Input -->
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-cardDark border border-zinc-800 p-3 rounded-2xl mb-8">
+                <!-- Position Filter Buttons -->
+                <div class="flex flex-wrap items-center gap-1.5" id="position-filters">
+                    <button onclick="setPositionFilter('ALL')" data-pos="ALL" class="pos-filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-crimson-600 text-white transition-all">
+                        All Players
+                    </button>
+                    <button onclick="setPositionFilter('Guard')" data-pos="Guard" class="pos-filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all">
+                        Guards (PG/SG)
+                    </button>
+                    <button onclick="setPositionFilter('Forward')" data-pos="Forward" class="pos-filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all">
+                        Forwards (SF/PF)
+                    </button>
+                    <button onclick="setPositionFilter('Center')" data-pos="Center" class="pos-filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all">
+                        Centers (C)
+                    </button>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="relative sm:w-64">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500 text-sm"></i>
+                    <input type="text" id="roster-search" oninput="renderRoster()" placeholder="Search name or #..." class="w-full pl-9 pr-4 py-2 rounded-xl bg-obsidian border border-zinc-800 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-crimson-500">
+                </div>
+            </div>
+
+            <!-- Roster Grid -->
+            <div id="roster-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Player cards dynamically injected by JavaScript -->
+            </div>
+
+            <!-- Empty Search State -->
+            <div id="roster-empty" class="hidden text-center py-16 bg-cardDark border border-zinc-800 rounded-3xl">
+                <i class="fa-solid fa-basketball text-4xl text-zinc-600 mb-3"></i>
+                <h3 class="font-display text-2xl font-bold text-white uppercase">No Players Found</h3>
+                <p class="text-sm text-zinc-400 mt-1">Try adjusting your position filter or search query.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- UPCOMING SCHEDULE & RECENT RESULTS SECTION -->
+    <section id="schedule" class="py-16 sm:py-20 bg-charcoal border-t border-crimson-500/35">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
+                <div>
+                    <span class="text-xs font-extrabold uppercase tracking-[0.2em] text-crimson-500">2026-27 Season Slate</span>
+                    <h2 class="font-display text-4xl sm:text-5xl font-bold uppercase tracking-tight text-white mt-1">
+                        Schedule & Results
+                    </h2>
+                </div>
+                <button id="add-game-btn" onclick="openAddGameModal()" class="coach-only hidden self-start sm:self-auto px-4 py-2.5 rounded-xl bg-obsidian hover:bg-zinc-900 border border-zinc-800 hover:border-crimson-500 text-white font-bold text-sm transition-all items-center gap-2">
+                    <i class="fa-solid fa-calendar-plus text-crimson-500"></i> Add Game / Score
+                </button>
+            </div>
+
+            <!-- Schedule List -->
+            <div id="schedule-list" class="space-y-4">
+                <!-- Schedule items dynamically injected by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-obsidian border-t border-crimson-500/35 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-crimson-500 to-crimson-900 border border-crimson-500/40 text-white flex items-center justify-center font-display font-bold text-xl">
+                        <i class="fa-solid fa-basketball"></i>
+                    </div>
+                    <div>
+                        <p class="font-display text-2xl font-bold uppercase text-white leading-none">Dream Killas Elite</p>
+                        <p class="text-xs text-zinc-500 mt-0.5">Hardwork • Brotherhood • Championship Mentality</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <a href="#next-game" class="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-crimson-500 text-zinc-400 hover:text-crimson-500 flex items-center justify-center transition-colors" aria-label="Instagram">
+                        <i class="fa-brands fa-instagram text-lg"></i>
+                    </a>
+                    <a href="#next-game" class="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-crimson-500 text-zinc-400 hover:text-crimson-500 flex items-center justify-center transition-colors" aria-label="Twitter / X">
+                        <i class="fa-brands fa-x-twitter text-lg"></i>
+                    </a>
+                    <a href="#next-game" class="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-crimson-500 text-zinc-400 hover:text-crimson-500 flex items-center justify-center transition-colors" aria-label="YouTube Highlights">
+                        <i class="fa-brands fa-youtube text-lg"></i>
+                    </a>
+                    <button onclick="openTryoutModal()" class="px-4 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-xs font-bold text-white transition-colors">
+                        Contact Coaching Staff
+                    </button>
+                </div>
+            </div>
+            <div class="mt-8 pt-6 border-t border-zinc-900 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-500 gap-2">
+                <p>&copy; 2026 Dream Killas Elite Basketball Club. All rights reserved.</p>
+                <div class="flex items-center gap-4">
+                    <p>Tip-off times displayed in Eastern Standard Time (EST).</p>
+                    <button onclick="handleCoachStatusClick()" class="text-zinc-600 hover:text-crimson-500 transition-colors flex items-center gap-1" title="Coach Admin Login">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <span id="footer-coach-label">Coach Login</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===================================================================== -->
+    <!-- MODALS (Player Details, Add/Edit Player, Edit Next Game, Add Schedule) -->
+    <!-- ===================================================================== -->
+
+    <!-- 1. Player Bio & Stats Detail Modal -->
+    <div id="player-detail-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+        <div class="bg-cardDark border border-zinc-700 rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl animate-fade-in">
+            <div class="relative bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 p-6 border-b border-zinc-700">
+                <button onclick="closeModal('player-detail-modal')" class="absolute top-4 right-4 w-9 h-9 rounded-xl bg-obsidian/60 text-zinc-300 hover:text-white flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <div class="flex items-center gap-4">
+                    <div id="modal-player-number" class="w-16 h-16 rounded-2xl bg-crimson-600 text-white font-display text-4xl font-bold flex items-center justify-center shadow-lg">
+                        #0
+                    </div>
+                    <div>
+                        <span id="modal-player-pos-badge" class="px-2.5 py-0.5 rounded-md bg-crimson-600/20 text-scarlet-400 text-xs font-bold uppercase tracking-wider">
+                            Point Guard
+                        </span>
+                        <h3 id="modal-player-name" class="font-display text-3xl sm:text-4xl font-bold uppercase text-white mt-1 leading-none">
+                            Player Name
+                        </h3>
+                        <p id="modal-player-vitals" class="text-xs text-zinc-400 mt-1">6'2" • 185 lbs • Class of 2027</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 space-y-6">
+                <!-- Season Averages -->
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-zinc-400 mb-3">2026-27 Season Averages</h4>
+                    <div class="grid grid-cols-3 gap-3 text-center">
+                        <div class="bg-obsidian border border-zinc-800 rounded-2xl p-3">
+                            <span id="modal-player-ppg" class="font-display text-3xl font-bold text-crimson-500 block">0.0</span>
+                            <span class="text-[11px] font-bold text-zinc-400 uppercase">PPG</span>
+                        </div>
+                        <div class="bg-obsidian border border-zinc-800 rounded-2xl p-3">
+                            <span id="modal-player-rpg" class="font-display text-3xl font-bold text-white block">0.0</span>
+                            <span class="text-[11px] font-bold text-zinc-400 uppercase">RPG</span>
+                        </div>
+                        <div class="bg-obsidian border border-zinc-800 rounded-2xl p-3">
+                            <span id="modal-player-apg" class="font-display text-3xl font-bold text-scarlet-400 block">0.0</span>
+                            <span class="text-[11px] font-bold text-zinc-400 uppercase">APG</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scouting Report / Bio -->
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">Scouting Report & Bio</h4>
+                    <p id="modal-player-bio" class="text-sm text-zinc-300 leading-relaxed bg-obsidian/60 p-4 rounded-2xl border border-zinc-800/80">
+                        Explosive combo guard with deep range and lockdown perimeter defense.
+                    </p>
+                </div>
+
+                <!-- Modal Actions -->
+                <div class="flex items-center justify-between pt-2 border-t border-zinc-800">
+                    <button id="modal-delete-player-btn" class="coach-only hidden px-4 py-2 rounded-xl bg-crimson-600/20 hover:bg-crimson-600 text-scarlet-400 hover:text-white text-xs font-bold transition-colors">
+                        <i class="fa-solid fa-trash mr-1"></i> Remove Player
+                    </button>
+                    <div class="flex items-center gap-2 ml-auto">
+                        <button id="modal-edit-player-btn" class="coach-only hidden px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-bold transition-colors">
+                            <i class="fa-solid fa-pen mr-1"></i> Edit Stats
+                        </button>
+                        <button onclick="closeModal('player-detail-modal')" class="px-5 py-2 rounded-xl bg-crimson-600 hover:bg-crimson-500 text-white text-xs font-extrabold">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Add / Edit Player Modal -->
+    <div id="player-form-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
+        <div class="bg-cardDark border border-zinc-700 rounded-3xl max-w-lg w-full p-6 shadow-2xl my-8">
+            <div class="flex items-center justify-between pb-4 border-b border-zinc-800 mb-5">
+                <h3 id="player-form-title" class="font-display text-3xl font-bold uppercase text-white">Add Roster Player</h3>
+                <button onclick="closeModal('player-form-modal')" class="w-9 h-9 rounded-xl bg-zinc-900 text-zinc-400 hover:text-white flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="player-form" onsubmit="handleSavePlayer(event)" class="space-y-4">
+                <input type="hidden" id="pf-id">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="sm:col-span-2">
+                        <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Full Name *</label>
+                        <input type="text" id="pf-name" required placeholder="e.g., Jalen Carter" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-zinc-700 text-sm text-white focus:border-crimson-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Jersey # *</label>
+                        <input type="number" id="pf-number" required min="0" max="99" placeholder="23" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-zinc-700 text-sm text-white focus:border-crimson-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Position Group *</label>
+                        <select id="pf-category" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-zinc-700 text-sm text-white focus:border-crimson-500 focus:outline-none">
+                            <option value="Guard">Guard (PG / SG)</option>
+                            <option value="Forward">Forward (SF / PF)</option>
+                            <option value="Center">Center (C)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Specific Role</label>
+                        <input type="text" id="pf-role" placeholder="e.g., Point Guard" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-zinc-700 text-sm text-white focus:border-crimson-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Height</label>
+                        <input type="text" id="pf-height" placeholder="6'3&quot;" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-zinc-700 text-sm text-white focus:border-crimson-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Weight</label>
+                        <input type="text" id="pf-weight" placeholder="190 lbs" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-zinc-700 text-sm text-white focus:border-crimson-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Class / Yr</label>
+                        <input type="text" id="pf-class" placeholder="2027" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-zinc-700 text-sm text-white focus:border-crimson-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">PPG</label>
+                        <input type="number" step="0.1" id="pf-ppg" value="12.5" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-zinc-700 text-sm text-white focus:border-crimson-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">RPG</label>
+                        <input type="number" step="0.1" id="pf-rpg" value="4.2" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-zinc-700 text-sm text-white focus:border-crimson-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">APG</label>
+                        <input type="number" step="0.1" id="pf-apg" value="3.8" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-zinc-700 text-sm text-white focus:border-crimson-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Player Bio / Strengths</label>
+                    <textarea id="pf-bio" rows="2" placeholder="High-motor scorer, elite perimeter defender..." class="w-full px-3.5 py-2 rounded-xl bg-obsidian border border-zinc-700 text-sm text-white focus:border-crimson-500 focus:outline-none"></textarea>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-3">
+                    <button type="button" onclick="closeModal('player-form-modal')" class="px-4 py-2.5 rounded-xl bg-zinc-800 text-zinc-300 text-sm font-bold">Cancel</button>
+                    <button type="submit" class="px-6 py-2.5 rounded-xl bg-crimson-600 hover:bg-crimson-500 text-white text-sm font-extrabold">Save Player</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 3. Edit Next Game Modal -->
+    <div id="edit-next-game-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
+        <div class="bg-cardDark border border-zinc-700 rounded-3xl max-w-lg w-full p-6 shadow-2xl my-8">
+            <div class="flex items-center justify-between pb-4 border-b border-zinc-800 mb-5">
+                <h3 class="font-display text-3xl font-bold uppercase text-white">Edit Next Game Countdown</h3>
+                <button onclick="closeModal('edit-next-game-modal')" class="w-9 h-9 rounded-xl bg-zinc-900 text-zinc-400 hover:text-white flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form onsubmit="handleSaveNextGame(event)" class="space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Opponent Team Name *</label>
+                        <input type="text" id="eng-opponent" required class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-zinc-700 text-sm text-white focus:border-crimson-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Opponent Record / Tag</label>
+                        <input type="text" id="eng-opp-record" placeholder="12-4 • AWAY" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-zinc-700 text-sm text-white focus:border-crimson-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Event / Tournament Name</label>
+                        <input type="text" id="eng-tournament" placeholder="Midwest Winter Classic" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-zinc-700 text-sm text-white focus:border-crimson-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Our Record Badge</label>
+                        <input type="text" id="eng-our-record" placeholder="14-2 • HOME" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-zinc-700 text-sm text-white focus:border-crimson-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Tip-Off Date & Time (EST) *</label>
+                    <input type="datetime-local" id="eng-datetime" required class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-zinc-700 text-sm text-white focus:border-crimson-500 focus:outline-none">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Arena / Gym Name *</label>
+                        <input type="text" id="eng-venue" required class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-zinc-700 text-sm text-white focus:border-crimson-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">City / Address</label>
+                        <input type="text" id="eng-address" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-zinc-700 text-sm text-white focus:border-crimson-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-3">
+                    <button type="button" onclick="closeModal('edit-next-game-modal')" class="px-4 py-2.5 rounded-xl bg-zinc-800 text-zinc-300 text-sm font-bold">Cancel</button>
+                    <button type="submit" class="px-6 py-2.5 rounded-xl bg-crimson-600 hover:bg-crimson-500 text-white text-sm font-extrabold">Update Matchup</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 4. Add Schedule / Result Modal -->
+    <div id="add-game-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+        <div class="bg-cardDark border border-zinc-700 rounded-3xl max-w-md w-full p-6 shadow-2xl">
+            <div class="flex items-center justify-between pb-4 border-b border-zinc-800 mb-5">
+                <h3 class="font-display text-3xl font-bold uppercase text-white">Add Schedule Game</h3>
+                <button onclick="closeModal('add-game-modal')" class="w-9 h-9 rounded-xl bg-zinc-900 text-zinc-400 hover:text-white flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <form onsubmit="handleAddScheduleGame(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Opponent *</label>
+                    <input type="text" id="sg-opponent" required placeholder="e.g., Bluegrass Hoops Elite" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-zinc-700 text-sm text-white focus:border-crimson-500 focus:outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Date *</label>
+                        <input type="text" id="sg-date" required placeholder="Nov 28, 2026" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-zinc-700 text-sm text-white focus:border-crimson-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Time / Status *</label>
+                        <input type="text" id="sg-time" required placeholder="6:00 PM EST" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-zinc-700 text-sm text-white focus:border-crimson-500 focus:outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Location / Arena *</label>
+                    <input type="text" id="sg-location" required placeholder="MidAmerica Sports Center" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-zinc-700 text-sm text-white focus:border-crimson-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Result (Leave blank if upcoming)</label>
+                    <input type="text" id="sg-result" placeholder="e.g., W 78-69 or L 64-67" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-zinc-700 text-sm text-white focus:border-crimson-500 focus:outline-none">
+                </div>
+                <div class="flex justify-end gap-3 pt-3">
+                    <button type="button" onclick="closeModal('add-game-modal')" class="px-4 py-2.5 rounded-xl bg-zinc-800 text-zinc-300 text-sm font-bold">Cancel</button>
+                    <button type="submit" class="px-6 py-2.5 rounded-xl bg-crimson-600 hover:bg-crimson-500 text-white text-sm font-extrabold">Save to Schedule</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 5. Tryout / Contact Modal -->
+    <div id="tryout-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+        <div class="bg-cardDark border border-zinc-700 rounded-3xl max-w-md w-full p-6 shadow-2xl">
+            <div class="flex items-center justify-between pb-4 border-b border-zinc-800 mb-5">
+                <h3 class="font-display text-3xl font-bold uppercase text-white">Tryout & Scrimmage Inquiry</h3>
+                <button onclick="closeModal('tryout-modal')" class="w-9 h-9 rounded-xl bg-zinc-900 text-zinc-400 hover:text-white flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <form onsubmit="handleTryoutSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Player / Coach Name *</label>
+                    <input type="text" required placeholder="Your full name" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-zinc-700 text-sm text-white focus:border-crimson-500 focus:outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Position / Grad Year</label>
+                        <input type="text" placeholder="PG • 2027" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-zinc-700 text-sm text-white focus:border-crimson-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Contact Phone / Email *</label>
+                        <input type="text" required placeholder="(502) 555-0199" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-zinc-700 text-sm text-white focus:border-crimson-500 focus:outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Message / Highlight Link</label>
+                    <textarea rows="3" placeholder="Tell us about your game or request a scrimmage matchup..." class="w-full px-3.5 py-2 rounded-xl bg-obsidian border border-zinc-700 text-sm text-white focus:border-crimson-500 focus:outline-none"></textarea>
+                </div>
+                <div class="flex justify-end gap-3 pt-2">
+                    <button type="button" onclick="closeModal('tryout-modal')" class="px-4 py-2.5 rounded-xl bg-zinc-800 text-zinc-300 text-sm font-bold">Cancel</button>
+                    <button type="submit" class="px-6 py-2.5 rounded-xl bg-crimson-600 hover:bg-crimson-500 text-white text-sm font-extrabold">Send Inquiry</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 6. Coach PIN Unlock Modal -->
+    <div id="coach-login-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/85 backdrop-blur-sm p-4">
+        <div class="bg-cardDark border border-zinc-700 rounded-3xl max-w-sm w-full p-6 shadow-2xl">
+            <div class="flex items-center justify-between pb-4 border-b border-zinc-800 mb-5">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-crimson-600/20 text-crimson-500 flex items-center justify-center">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+                    <h3 class="font-display text-3xl font-bold uppercase text-white leading-none">Coach Access</h3>
+                </div>
+                <button onclick="closeModal('coach-login-modal')" class="w-9 h-9 rounded-xl bg-zinc-900 text-zinc-400 hover:text-white flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <form onsubmit="handleCoachLogin(event)" class="space-y-4">
+                <p class="text-xs text-zinc-400 leading-relaxed">
+                    Enter your private Coach PIN to unlock roster, schedule, and next-game editing controls.
+                </p>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-zinc-400 mb-1.5">Coach PIN</label>
+                    <input type="password" id="coach-pin-input" inputmode="numeric" maxlength="12" required placeholder="••••" class="w-full px-4 py-3 rounded-xl bg-obsidian border border-zinc-700 text-center text-xl tracking-[0.4em] font-bold text-crimson-500 focus:border-crimson-500 focus:outline-none">
+                    <p id="coach-pin-error" class="hidden text-xs text-scarlet-400 font-semibold mt-2 text-center">
+                        Incorrect PIN. Please try again.
+                    </p>
+                </div>
+                <div class="flex justify-end gap-3 pt-2">
+                    <button type="button" onclick="closeModal('coach-login-modal')" class="px-4 py-2.5 rounded-xl bg-zinc-800 text-zinc-300 text-sm font-bold">Cancel</button>
+                    <button type="submit" class="px-6 py-2.5 rounded-xl bg-crimson-600 hover:bg-crimson-500 text-white text-sm font-extrabold">Unlock Editor</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 7. Change Coach PIN Modal -->
+    <div id="change-pin-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/85 backdrop-blur-sm p-4">
+        <div class="bg-cardDark border border-zinc-700 rounded-3xl max-w-sm w-full p-6 shadow-2xl">
+            <div class="flex items-center justify-between pb-4 border-b border-zinc-800 mb-5">
+                <h3 class="font-display text-3xl font-bold uppercase text-white leading-none">Change Coach PIN</h3>
+                <button onclick="closeModal('change-pin-modal')" class="w-9 h-9 rounded-xl bg-zinc-900 text-zinc-400 hover:text-white flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <form onsubmit="handleChangePin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">New Coach PIN (4-12 digits/chars)</label>
+                    <input type="password" id="new-coach-pin" minlength="4" maxlength="12" required placeholder="Enter new PIN" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-zinc-700 text-sm text-white focus:border-crimson-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-zinc-400 mb-1">Confirm New PIN</label>
+                    <input type="password" id="confirm-coach-pin" minlength="4" maxlength="12" required placeholder="Re-enter new PIN" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-zinc-700 text-sm text-white focus:border-crimson-500 focus:outline-none">
+                </div>
+                <p id="change-pin-error" class="hidden text-xs text-scarlet-400 font-semibold">PINs do not match.</p>
+                <div class="flex justify-end gap-3 pt-2">
+                    <button type="button" onclick="closeModal('change-pin-modal')" class="px-4 py-2.5 rounded-xl bg-zinc-800 text-zinc-300 text-sm font-bold">Cancel</button>
+                    <button type="submit" class="px-6 py-2.5 rounded-xl bg-crimson-600 hover:bg-crimson-500 text-white text-sm font-extrabold">Save New PIN</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // =========================================================================
+        // 1. BAKED-IN TEAM DATA & COACH SECURITY CONFIG
+        // (Updated automatically when you click "Export Updated HTML")
+        // =========================================================================
+        const BAKED_COACH_PIN = "2424";
+        const BAKED_DATA_VERSION = "v1";
+
+        const DEFAULT_PLAYERS = [
+            {
+                id: 'p1',
+                name: 'Marcus "MJ" Vance',
+                number: 1,
+                category: 'Guard',
+                role: 'Point Guard',
+                height: '6\'1"',
+                weight: '178 lbs',
+                gradYear: '2027',
+                ppg: 19.4,
+                rpg: 4.1,
+                apg: 7.8,
+                bio: 'Floor general with elite handle, deep three-point range, and relentless on-ball pressure.'
+            },
+            {
+                id: 'p2',
+                name: 'Devon Brooks',
+                number: 4,
+                category: 'Guard',
+                role: 'Shooting Guard',
+                height: '6\'3"',
+                weight: '188 lbs',
+                gradYear: '2027',
+                ppg: 17.2,
+                rpg: 3.9,
+                apg: 3.1,
+                bio: 'Three-level perimeter scorer who thrives in transition and catches fire from beyond the arc.'
+            },
+            {
+                id: 'p3',
+                name: 'Treyvon Miller',
+                number: 11,
+                category: 'Forward',
+                role: 'Small Forward',
+                height: '6\'6"',
+                weight: '205 lbs',
+                gradYear: '2026',
+                ppg: 15.8,
+                rpg: 6.7,
+                apg: 2.9,
+                bio: 'Versatile two-way wing capable of guarding positions 1 through 4 and finishing above the rim.'
+            },
+            {
+                id: 'p4',
+                name: 'Kobe Jenkins',
+                number: 24,
+                category: 'Forward',
+                role: 'Power Forward',
+                height: '6\'7"',
+                weight: '218 lbs',
+                gradYear: '2027',
+                ppg: 13.5,
+                rpg: 8.4,
+                apg: 1.9,
+                bio: 'Physical rebounder with a smooth mid-range face-up game and high defensive motor.'
+            },
+            {
+                id: 'p5',
+                name: 'Isaiah Washington',
+                number: 34,
+                category: 'Center',
+                role: 'Center',
+                height: '6\'9"',
+                weight: '235 lbs',
+                gradYear: '2026',
+                ppg: 11.9,
+                rpg: 10.6,
+                apg: 1.4,
+                bio: 'Rim-protecting anchor averaging 2.8 blocks per game with dominant paint presence.'
+            },
+            {
+                id: 'p6',
+                name: 'Cameron Hayes',
+                number: 3,
+                category: 'Guard',
+                role: 'Combo Guard',
+                height: '6\'0"',
+                weight: '172 lbs',
+                gradYear: '2028',
+                ppg: 10.4,
+                rpg: 2.8,
+                apg: 4.5,
+                bio: 'Spark plug off the bench known for lockdown steals and quick downhill attacks.'
+            },
+            {
+                id: 'p7',
+                name: 'Jalen Reed',
+                number: 15,
+                category: 'Forward',
+                role: 'Wing / Forward',
+                height: '6\'5"',
+                weight: '198 lbs',
+                gradYear: '2027',
+                ppg: 9.2,
+                rpg: 5.1,
+                apg: 2.0,
+                bio: 'High-IQ cutter, corner three specialist, and glue guy on both ends of the floor.'
+            },
+            {
+                id: 'p8',
+                name: 'Malik Dorsey',
+                number: 50,
+                category: 'Center',
+                role: 'Forward / Center',
+                height: '6\'8"',
+                weight: '225 lbs',
+                gradYear: '2027',
+                ppg: 7.6,
+                rpg: 6.9,
+                apg: 1.1,
+                bio: 'Enforcer in the paint who sets bone-crushing screens and controls the offensive glass.'
+            }
+        ];
+
+        const BAKED_NEXT_GAME = null;
+
+        // Default Next Game set 8 days from current date if no custom baked game exists
+        function getDefaultNextGame() {
+            if (BAKED_NEXT_GAME) {
+                return { ...BAKED_NEXT_GAME, rsvped: false };
+            }
+            const target = new Date();
+            target.setDate(target.getDate() + 8);
+            target.setHours(19, 30, 0, 0);
+            const pad = (n) => String(n).padStart(2, '0');
+            const isoLocal = `${target.getFullYear()}-${pad(target.getMonth() + 1)}-${pad(target.getDate())}T${pad(target.getHours())}:${pad(target.getMinutes())}`;
+
+            return {
+                opponent: 'Metro City Ballers',
+                oppRecord: '12-4 • AWAY',
+                ourRecord: '14-2 • HOME',
+                tournament: 'Midwest Winter Classic',
+                datetime: isoLocal,
+                venue: 'Kentucky Exposition Center — Court 1',
+                address: '937 Phillips Ln, Louisville, KY',
+                rsvped: false
+            };
+        }
+
+        const DEFAULT_SCHEDULE = [
+            {
+                id: 'g1',
+                date: 'Nov 21, 2026',
+                opponent: 'Metro City Ballers',
+                location: 'Kentucky Exposition Center — Court 1',
+                time: '7:30 PM EST',
+                result: '' // Upcoming
+            },
+            {
+                id: 'g2',
+                date: 'Nov 28, 2026',
+                opponent: 'Bluegrass Select 17U',
+                location: 'MidAmerica Sports Center, Louisville',
+                time: '5:45 PM EST',
+                result: ''
+            },
+            {
+                id: 'g3',
+                date: 'Dec 05, 2026',
+                opponent: 'Indiana Prime Hoops',
+                location: 'Pacers Athletic Center — Court 4',
+                time: '8:15 PM EST',
+                result: ''
+            },
+            {
+                id: 'g4',
+                date: 'Nov 07, 2026',
+                opponent: 'River City Legends',
+                location: 'Broadbent Arena',
+                time: 'FINAL',
+                result: 'W 88 - 74'
+            },
+            {
+                id: 'g5',
+                date: 'Nov 01, 2026',
+                opponent: 'Ohio Valley Flight',
+                location: 'Hoops Factory Gym',
+                time: 'FINAL',
+                result: 'W 79 - 71'
+            }
+        ];
+
+        // State variables
+        let players = [];
+        let nextGame = {};
+        let schedule = [];
+        let activePositionFilter = 'ALL';
+        let manageMode = false; // Always false (locked) by default for public visitors
+        let coachPin = BAKED_COACH_PIN;
+        let countdownInterval = null;
+
+        // =========================================================================
+        // 2. INITIALIZATION & STORAGE
+        // =========================================================================
+        function initApp() {
+            try {
+                const storedVersion = localStorage.getItem('dke_data_version');
+                const savedPin = localStorage.getItem('dke_coach_pin');
+                if (savedPin) coachPin = savedPin;
+
+                // If you exported a newer HTML file, load the newly baked data automatically
+                if (storedVersion !== BAKED_DATA_VERSION) {
+                    players = [...DEFAULT_PLAYERS];
+                    nextGame = getDefaultNextGame();
+                    schedule = [...DEFAULT_SCHEDULE];
+                    localStorage.setItem('dke_data_version', BAKED_DATA_VERSION);
+                    saveState();
+                } else {
+                    const savedPlayers = localStorage.getItem('dke_players');
+                    const savedNextGame = localStorage.getItem('dke_next_game');
+                    const savedSchedule = localStorage.getItem('dke_schedule');
+
+                    players = savedPlayers ? JSON.parse(savedPlayers) : [...DEFAULT_PLAYERS];
+                    nextGame = savedNextGame ? JSON.parse(savedNextGame) : getDefaultNextGame();
+                    schedule = savedSchedule ? JSON.parse(savedSchedule) : [...DEFAULT_SCHEDULE];
+                }
+            } catch (e) {
+                console.error('Storage error, using defaults:', e);
+                players = [...DEFAULT_PLAYERS];
+                nextGame = getDefaultNextGame();
+                schedule = [...DEFAULT_SCHEDULE];
+            }
+
+            // Keyboard shortcut: Ctrl+Shift+L (or Cmd+Shift+L) opens Coach Login
+            document.addEventListener('keydown', (e) => {
+                if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'l') {
+                    e.preventDefault();
+                    handleCoachStatusClick();
+                }
+            });
+
+            updateCoachUI();
+            renderNextGame();
+            startCountdown();
+            renderRoster();
+            renderSchedule();
+            updateTeamStatsSummary();
+        }
+
+        function saveState() {
+            try {
+                localStorage.setItem('dke_players', JSON.stringify(players));
+                localStorage.setItem('dke_next_game', JSON.stringify(nextGame));
+                localStorage.setItem('dke_schedule', JSON.stringify(schedule));
+            } catch (e) {
+                console.error('Could not save to localStorage:', e);
+            }
+            updateTeamStatsSummary();
+        }
+
+        function resetDemoData() {
+            if (!manageMode) return;
+            players = [...DEFAULT_PLAYERS];
+            nextGame = getDefaultNextGame();
+            schedule = [...DEFAULT_SCHEDULE];
+            saveState();
+            renderNextGame();
+            renderRoster();
+            renderSchedule();
+            showToast('Reset to baked-in roster & schedule.', 'info');
+        }
+
+        // =========================================================================
+        // 2B. COACH AUTHENTICATION, LOCKING & STANDALONE HTML EXPORT
+        // =========================================================================
+        function handleCoachStatusClick() {
+            if (manageMode) {
+                lockCoachMode();
+            } else {
+                document.getElementById('coach-pin-input').value = '';
+                document.getElementById('coach-pin-error').classList.add('hidden');
+                openModal('coach-login-modal');
+                setTimeout(() => document.getElementById('coach-pin-input').focus(), 100);
+            }
+        }
+
+        function handleCoachLogin(e) {
+            e.preventDefault();
+            const entered = document.getElementById('coach-pin-input').value.trim();
+            if (entered === coachPin) {
+                manageMode = true;
+                closeModal('coach-login-modal');
+                updateCoachUI();
+                renderRoster();
+                renderSchedule();
+                showToast('Coach Mode unlocked! You can now edit the team site.', 'success');
+            } else {
+                document.getElementById('coach-pin-error').classList.remove('hidden');
+                document.getElementById('coach-pin-input').value = '';
+                document.getElementById('coach-pin-input').focus();
+            }
+        }
+
+        function lockCoachMode() {
+            manageMode = false;
+            updateCoachUI();
+            renderRoster();
+            renderSchedule();
+            showToast('Site locked in public read-only mode.', 'info');
+        }
+
+        function updateCoachUI() {
+            const banner = document.getElementById('manage-banner');
+            const btnText = document.getElementById('coach-btn-text');
+            const btn = document.getElementById('coach-status-btn');
+            const lockIcon = document.getElementById('coach-lock-icon');
+            const footerLabel = document.getElementById('footer-coach-label');
+            const coachOnlyEls = document.querySelectorAll('.coach-only');
+
+            if (manageMode) {
+                banner.classList.remove('hidden');
+                btnText.textContent = 'Unlocked';
+                lockIcon.className = 'fa-solid fa-lock-open text-xs text-emerald-400';
+                btn.classList.add('border-crimson-500', 'text-crimson-500');
+                footerLabel.textContent = 'Lock Coach Mode';
+                coachOnlyEls.forEach(el => {
+                    el.classList.remove('hidden');
+                    if (el.tagName === 'BUTTON' && !el.classList.contains('inline-flex')) {
+                        el.classList.add('inline-flex');
+                    }
+                });
+            } else {
+                banner.classList.add('hidden');
+                btnText.textContent = 'Coach';
+                lockIcon.className = 'fa-solid fa-lock text-xs';
+                btn.classList.remove('border-crimson-500', 'text-crimson-500');
+                footerLabel.textContent = 'Coach Login';
+                coachOnlyEls.forEach(el => {
+                    el.classList.add('hidden');
+                    el.classList.remove('inline-flex');
+                });
+            }
+        }
+
+        function openChangePinModal() {
+// ... existing code ... -->
+            // RSVP button state
+            const rsvpBtn = document.getElementById('rsvp-btn');
+            const rsvpText = document.getElementById('rsvp-btn-text');
+            if (nextGame.rsvped) {
+                rsvpBtn.classList.remove('bg-crimson-600', 'hover:bg-crimson-700', 'text-white');
+                rsvpBtn.classList.add('bg-emerald-500', 'hover:bg-emerald-400', 'text-obsidian');
+                rsvpText.textContent = 'Fan Pass Reserved ✓';
+            } else {
+                rsvpBtn.classList.add('bg-crimson-600', 'hover:bg-crimson-700', 'text-white');
+                rsvpBtn.classList.remove('bg-emerald-500', 'hover:bg-emerald-400', 'text-obsidian');
+                rsvpText.textContent = 'RSVP / Fan Pass';
+            }
+        }
+
+        function startCountdown() {
+// ... existing code ... -->
+            emptyState.classList.add('hidden');
+            grid.innerHTML = filtered.map(player => {
+                // Capitalize first letter cleanly
+                const displayName = player.name.charAt(0).toUpperCase() + player.name.slice(1);
+                return `
+                <div onclick="openPlayerDetail('${player.id}')" class="group relative bg-cardDark border border-zinc-800 rounded-3xl overflow-hidden cursor-pointer card-hover flex flex-col justify-between">
+                    <!-- Top Athlete Visual Banner -->
+                    <div class="relative h-44 bg-gradient-to-br from-crimson-900 via-charcoal to-obsidian p-5 flex items-end justify-between overflow-hidden">
+                        <!-- Giant Background Jersey Number -->
+                        <span class="absolute -right-2 -top-4 font-display text-9xl font-bold jersey-stroke select-none pointer-events-none group-hover:scale-105 transition-transform">
+                            ${player.number}
+                        </span>
+
+                        <!-- Stylized Basketball Athlete Silhouette SVG -->
+                        <svg class="w-24 h-24 text-zinc-700/80 group-hover:text-crimson-500/80 transition-colors z-10" viewBox="0 0 64 64" fill="currentColor">
+                            <circle cx="32" cy="16" r="9"/>
+                            <path d="M18 56v-16c0-6.6 5.4-12 12-12h4c6.6 0 12 5.4 12 12v16H18z"/>
+                            <circle cx="50" cy="24" r="6" class="text-crimson-500"/>
+                        </svg>
+
+                        <!-- Jersey Badge -->
+                        <div class="z-10 px-3 py-1 rounded-xl bg-obsidian/90 border border-crimson-500/40 text-crimson-500 font-display text-2xl font-bold leading-none">
+                            #${player.number}
+                        </div>
+                    </div>
+
+                    <!-- Player Info & Stats -->
+                    <div class="p-5 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between gap-2 mb-1">
+                                <span class="text-[11px] font-extrabold uppercase tracking-wider text-scarlet-400">
+                                    ${player.role || player.category}
+                                </span>
+                                <span class="text-[11px] font-semibold text-zinc-500">
+                                    Class of ${player.gradYear || '2027'}
+                                </span>
+                            </div>
+                            <h3 class="font-display text-2xl sm:text-3xl font-bold uppercase text-white group-hover:text-crimson-500 transition-colors leading-tight">
+                                ${displayName}
+                            </h3>
+                            <p class="text-xs text-zinc-400 mt-1">
+                                ${player.height || '6\'2"'} • ${player.weight || '185 lbs'}
+                            </p>
+                        </div>
+
+                        <!-- Mini Stat Strip -->
+                        <div class="grid grid-cols-3 gap-2 mt-5 pt-4 border-t border-zinc-800/90 text-center">
+                            <div class="bg-obsidian/70 rounded-xl py-1.5">
+                                <span class="font-display text-xl font-bold text-white block leading-none">${Number(player.ppg).toFixed(1)}</span>
+                                <span class="text-[10px] font-bold text-zinc-500 uppercase">PPG</span>
+                            </div>
+                            <div class="bg-obsidian/70 rounded-xl py-1.5">
+                                <span class="font-display text-xl font-bold text-white block leading-none">${Number(player.rpg).toFixed(1)}</span>
+                                <span class="text-[10px] font-bold text-zinc-500 uppercase">RPG</span>
+                            </div>
+                            <div class="bg-obsidian/70 rounded-xl py-1.5">
+                                <span class="font-display text-xl font-bold text-white block leading-none">${Number(player.apg).toFixed(1)}</span>
+                                <span class="text-[10px] font-bold text-zinc-500 uppercase">APG</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    ${manageMode ? `
+                    <div onclick="event.stopPropagation(); deletePlayer('${player.id}')" class="bg-crimson-600 hover:bg-crimson-500 text-white text-center py-2 text-xs font-extrabold uppercase tracking-wider transition-colors">
+                        <i class="fa-solid fa-trash mr-1"></i> Remove Player
+                    </div>
+                    ` : ''}
+                </div>
+                `;
+            }).join('');
+        }
+
+        function openPlayerDetail(playerId) {
+            const p = players.find(item => item.id === playerId);
+            if (!p) return;
+
+            document.getElementById('modal-player-number').textContent = `#${p.number}`;
+            document.getElementById('modal-player-pos-badge').textContent = p.role || p.category;
+            document.getElementById('modal-player-name').textContent = p.name;
+            document.getElementById('modal-player-vitals').textContent = `${p.height} • ${p.weight} • Class of ${p.gradYear}`;
+            document.getElementById('modal-player-ppg').textContent = Number(p.ppg).toFixed(1);
+            document.getElementById('modal-player-rpg').textContent = Number(p.rpg).toFixed(1);
+            document.getElementById('modal-player-apg').textContent = Number(p.apg).toFixed(1);
+            document.getElementById('modal-player-bio').textContent = p.bio || 'Key contributor for Dream Killas Elite.';
+
+            document.getElementById('modal-delete-player-btn').onclick = () => {
+                if (!manageMode) return;
+                closeModal('player-detail-modal');
+                deletePlayer(p.id);
+            };
+            document.getElementById('modal-edit-player-btn').onclick = () => {
+                if (!manageMode) return;
+                closeModal('player-detail-modal');
+                openPlayerFormModal(p.id);
+            };
+
+            updateCoachUI();
+            openModal('player-detail-modal');
+        }
+
+        function openPlayerFormModal(editId = null) {
+            if (!manageMode) return;
+            const form = document.getElementById('player-form');
+            form.reset();
+
+            if (editId) {
+                const p = players.find(item => item.id === editId);
+                if (!p) return;
+                document.getElementById('player-form-title').textContent = 'Edit Player Profile';
+                document.getElementById('pf-id').value = p.id;
+                document.getElementById('pf-name').value = p.name;
+                document.getElementById('pf-number').value = p.number;
+                document.getElementById('pf-category').value = p.category;
+                document.getElementById('pf-role').value = p.role;
+                document.getElementById('pf-height').value = p.height;
+                document.getElementById('pf-weight').value = p.weight;
+                document.getElementById('pf-class').value = p.gradYear;
+                document.getElementById('pf-ppg').value = p.ppg;
+                document.getElementById('pf-rpg').value = p.rpg;
+                document.getElementById('pf-apg').value = p.apg;
+                document.getElementById('pf-bio').value = p.bio;
+            } else {
+                document.getElementById('player-form-title').textContent = 'Add Roster Player';
+                document.getElementById('pf-id').value = '';
+            }
+
+            openModal('player-form-modal');
+        }
+
+        function handleSavePlayer(e) {
+            e.preventDefault();
+            if (!manageMode) return;
+            const existingId = document.getElementById('pf-id').value;
+            const playerObj = {
+                id: existingId || 'p_' + Date.now(),
+                name: document.getElementById('pf-name').value.trim(),
+                number: parseInt(document.getElementById('pf-number').value, 10) || 0,
+                category: document.getElementById('pf-category').value,
+                role: document.getElementById('pf-role').value.trim() || document.getElementById('pf-category').value,
+                height: document.getElementById('pf-height').value.trim() || '6\'2"',
+                weight: document.getElementById('pf-weight').value.trim() || '185 lbs',
+                gradYear: document.getElementById('pf-class').value.trim() || '2027',
+                ppg: parseFloat(document.getElementById('pf-ppg').value) || 0,
+                rpg: parseFloat(document.getElementById('pf-rpg').value) || 0,
+                apg: parseFloat(document.getElementById('pf-apg').value) || 0,
+                bio: document.getElementById('pf-bio').value.trim()
+            };
+
+            if (existingId) {
+                const idx = players.findIndex(p => p.id === existingId);
+                if (idx !== -1) players[idx] = playerObj;
+                showToast(`Updated ${playerObj.name}'s profile!`, 'success');
+            } else {
+                players.unshift(playerObj);
+                showToast(`Added #${playerObj.number} ${playerObj.name} to Dream Killas Elite!`, 'success');
+            }
+
+            saveState();
+            renderRoster();
+            closeModal('player-form-modal');
+        }
+
+        function deletePlayer(playerId) {
+            if (!manageMode) return;
+            const target = players.find(p => p.id === playerId);
+            players = players.filter(p => p.id !== playerId);
+            saveState();
+            renderRoster();
+            if (target) {
+                showToast(`Removed ${target.name} from the roster.`, 'info');
+            }
+        }
+
+        // =========================================================================
+        // 5. SCHEDULE & RESULTS RENDERING
+        // =========================================================================
+        function renderSchedule() {
+            const container = document.getElementById('schedule-list');
+            container.innerHTML = schedule.map(game => {
+                const isCompleted = Boolean(game.result && game.result.trim());
+                const isWin = isCompleted && game.result.trim().toUpperCase().startsWith('W');
+
+                return `
+                <div class="bg-cardDark border border-zinc-800 hover:border-zinc-700 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all">
+                    <div class="flex items-start sm:items-center gap-4">
+                        <div class="px-3.5 py-2 rounded-xl bg-obsidian border border-zinc-800 text-center min-w-[105px]">
+                            <span class="text-xs font-extrabold uppercase text-crimson-500 block">${game.date}</span>
+                            <span class="text-[11px] font-semibold text-zinc-400">${game.time}</span>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-bold uppercase tracking-wider text-zinc-500">VS</span>
+                                <h4 class="font-display text-2xl sm:text-3xl font-bold uppercase text-white leading-none">
+                                    ${game.opponent}
+                                </h4>
+                            </div>
+                            <p class="text-xs text-zinc-400 mt-1">
+                                <i class="fa-solid fa-location-dot text-zinc-500 mr-1"></i> ${game.location}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between sm:justify-end gap-3 border-t sm:border-t-0 border-zinc-800 pt-3 sm:pt-0">
+                        ${isCompleted ? `
+                            <span class="px-3.5 py-1.5 rounded-xl text-xs font-extrabold uppercase tracking-wider ${isWin ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30' : 'bg-crimson-500/15 text-scarlet-400 border border-crimson-500/30'}">
+                                ${game.result}
+                            </span>
+                        ` : `
+                            <span class="px-3.5 py-1.5 rounded-xl bg-crimson-600/15 text-scarlet-400 border border-crimson-500/30 text-xs font-extrabold uppercase tracking-wider">
+                                Upcoming
+                            </span>
+                        `}
+
+                        ${manageMode ? `
+                    <div onclick="event.stopPropagation(); deletePlayer('${player.id}')" class="bg-crimson-600 hover:bg-crimson-700 text-white text-center py-2 text-xs font-extrabold uppercase tracking-wider transition-colors">
+                        <i class="fa-solid fa-trash mr-1"></i> Remove Player
+                    </div>
+                    ` : ''}
+                </div>
+                `;
+            }).join('');
+        }
+// ... existing code ... -->
